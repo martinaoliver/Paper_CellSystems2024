@@ -1,0 +1,12 @@
+#!/bin/sh
+#PBS -l walltime=00:20:00
+#PBS -l select=1:ncpus=10:mem=96gb
+
+
+
+module load anaconda3/personal
+source activate env1
+cd $PBS_O_WORKDIR
+
+
+python parallelised_job.py 10
