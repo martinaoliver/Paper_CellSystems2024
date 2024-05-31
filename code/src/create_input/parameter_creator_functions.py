@@ -2,7 +2,6 @@
 ###imports#####
 #############
 import numpy as np
-import pandas as pd
 from tqdm import tqdm
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -13,6 +12,13 @@ from matplotlib import pyplot as plt
 #############
 
 np.random.seed(1)
+
+def preLhs(parameterDictList):
+    parameterDistributionList = [parameterDistribution(parameterDict,100000) for parameterDict in parameterDictList]
+    distributionMinimumLenght = np.amin([len(x) for x in parameterDistributionList])
+    croppedParameterDistributionList = [x[:distributionMinimumLenght] for x in parameterDistributionList]
+    stackedDistributions = np.column_stack((croppedParameterDistributionList))
+    return stackedDistributions
 
 def lhs(data, nsample,seed=1, tqdm_disable=False):
     np.random.seed(seed)
@@ -35,24 +41,24 @@ def loguniform(size, low=-3, high=3):
 
 
 
-def parameterGaussian(name, mean, noisetosignal, size):
+def parameterGaussian( mean, noisetosignal, size):
     stdev = noisetosignal * mean
     gaussianDistribution = np.random.normal(mean, stdev, size)
     return gaussianDistribution
 
-def parameterLogNormal(name, mean, noisetosignal, size):
+def parameterLogNormal(mean, noisetosignal, size):
     sigma = noisetosignal * mean
     normal_std = np.sqrt(np.log(1 + (sigma/mean)**2))
     normal_mean = np.log(mean) - normal_std**2 / 2
     lognormalDistribution = np.random.lognormal(normal_mean, normal_std, size)
     return lognormalDistribution
 
-def parameterLogUniform(name, min, max, size):
+def parameterLogUniform( min, max, size):
     loguniformDistribution = loguniform(size)
     croppedLoguniformDistribution = np.array([x for x in loguniformDistribution if min <= x <= max])
     return croppedLoguniformDistribution
 
-def parameterFixed(name, value, size):
+def parameterFixed( value, size):
     fixedDistribution = np.full((size), value)
     return fixedDistribution
 
@@ -60,21 +66,15 @@ def parameterFixed(name, value, size):
 
 def parameterDistribution(parameterDict,size):
     if parameterDict['distribution']=='gaussian':
-        dist = parameterGaussian(parameterDict['name'],parameterDict['mean'], parameterDict['noisetosignal'],size)
+        dist = parameterGaussian(parameterDict['mean'], parameterDict['noisetosignal'],size)
     if parameterDict['distribution']=='lognormal':
-        dist = parameterLogNormal(parameterDict['name'],parameterDict['mean'], parameterDict['noisetosignal'],size)
+        dist = parameterLogNormal(parameterDict['mean'], parameterDict['noisetosignal'],size)
     if parameterDict['distribution']=='loguniform':
-        dist =  parameterLogUniform(parameterDict['name'],parameterDict['min'], parameterDict['max'],size)
+        dist =  parameterLogUniform(parameterDict['min'], parameterDict['max'],size)
     if parameterDict['distribution']=='fixed':
-        dist =  parameterFixed(parameterDict['name'],parameterDict['value'],size)
+        dist =  parameterFixed(parameterDict['value'],size)
     return dist
 
-def preLhs(parameterDictList):
-    parameterDistributionList = [parameterDistribution(parameterDict,100000) for parameterDict in parameterDictList]
-    distributionMinimumLenght = np.amin([len(x) for x in parameterDistributionList])
-    croppedParameterDistributionList = [x[:distributionMinimumLenght] for x in parameterDistributionList]
-    stackedDistributions = np.column_stack((croppedParameterDistributionList))
-    return stackedDistributions
 
 def plotDist(parameterDictList,lhsDist_df):
     nvar = len(parameterDictList)

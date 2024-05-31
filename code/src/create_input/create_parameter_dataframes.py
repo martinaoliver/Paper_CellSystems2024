@@ -9,7 +9,6 @@ from parameter_creator_functions import *
 ### imported packages###
 #############
 
-import numpy as np
 import pandas as pd
 import pickle as pkl
 
@@ -77,11 +76,11 @@ D_parameters = [Dr]
 
 
 #Plot the distributions
-plotDistributions=True
+plotDistributions=False
 if plotDistributions == True:
-    D_parameters = [Dr, Dr]
+    D_parameters_plotting = [Dr, Dr]
     nsamples=10000
-    parameterTypeList = [ D_parameters  , V_parameters , K_parameters , mu_parameters , n_parameters]
+    parameterTypeList = [ D_parameters_plotting  , V_parameters , K_parameters , mu_parameters , n_parameters]
 
     for parameterType in parameterTypeList:
         stackedDistributions = preLhs(parameterType)
