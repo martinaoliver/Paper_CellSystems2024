@@ -97,7 +97,7 @@ def plot_redgreen_contrast(final_concentration, mm,filename=None, path=None, par
         plt.tight_layout()
 
         if save_figure == True:
-            plt.savefig(path + '/2Dfinal_%s_rg.png' %filename,dpi=2000)
+            # plt.savefig(path + '/2Dfinal_%s_rg.png' %filename,dpi=2000)
             plt.savefig(path + '/2Dfinal_%s_rg.pdf' %filename,dpi=2000)
             plt.show()
             plt.close()

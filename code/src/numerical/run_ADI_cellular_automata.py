@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-from colony_mask_creation import run_cellular_automata_colony
+from colony_mask_functions import run_cellular_automata_colony
 from ADI_cellular_automata_functions import ADI_cellular_automata
 from numerical_plotting_functions import plot_redgreen_contrast
 
@@ -81,7 +81,7 @@ parID=1
 
 
 #%%
-test = True
+test = False
 tqdm_disable=False
 if test==True:
     print('test')
