@@ -1,14 +1,13 @@
 #%%
 #############
-###paths#####
+###imports#####
 #############
-
+import sys
 import pickle
 import time
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-
 from colony_mask_functions import run_cellular_automata_colony
 from ADI_cellular_automata_functions import ADI_cellular_automata
 from numerical_plotting_functions import plot_redgreen_contrast
@@ -21,7 +20,7 @@ from numerical_plotting_functions import plot_redgreen_contrast
 #############
 shape = 'ca'
 circuit_n=1;variant=1;n_species=6
-n_samples = 100
+n_samples = 2000
 balance = 'balanced'
 output_directory = f"../../out/numerical_results/circuit{circuit_n}_variant{variant}_{balance}" #folder to save numerical results
 Path(output_directory).mkdir(parents=True, exist_ok=True) #create folder if it does not exist
@@ -33,6 +32,7 @@ tqdm_disable = False #disable tqdm
 
 # open parameter dictionaries
 df= pickle.load( open( "../../out/parameter_dataframes/literature_derived_parameters/df_circuit1_variant1_100parametersets_balanced.pkl", "rb"))
+df= pickle.load( open( "../../input/precalculated_df/df_circuit1_variantfitted1_gaussian4187715_nsr0.01_2000parametersets.pkl", "rb"))
 
 
 #slowgrowth
@@ -40,21 +40,21 @@ L=20; dx =0.1; J = int(L/dx)
 T =100; dt = 0.02; N = int(T/dt)
 boundaryCoeff = 2
 division_time_hours=0.5
-p_division=0.38;seed=1
-# 
-#mediumgrowth
-L=20; dx =0.1; J = int(L/dx)
-T =50; dt = 0.02; N = int(T/dt)
-boundaryCoeff = 1
-division_time_hours=0.5
-p_division=1;seed=1
+p_division=0.38;seed=int(sys.argv[1])
+ 
+# #mediumgrowth
+# L=20; dx =0.1; J = int(L/dx)
+# T =50; dt = 0.02; N = int(T/dt)
+# boundaryCoeff = 1
+# division_time_hours=0.5
+# p_division=1;seed=1
 
-# # fastgrowth
-L=20; dx =0.1; J = int(L/dx)
-T =25; dt = 0.02; N = int(T/dt)
-boundaryCoeff = 1
-division_time_hours=0.2
-p_division=0.7;seed=1
+# # # fastgrowth
+# L=20; dx =0.1; J = int(L/dx)
+# T =25; dt = 0.02; N = int(T/dt)
+# boundaryCoeff = 1
+# division_time_hours=0.2
+# p_division=0.7;seed=int(sys.argv[1])
 
 
 shape = 'ca'
@@ -69,15 +69,15 @@ except:
     #file does not exist
     FileNotFoundError
     print('Cellular automata mask does not exist. Running cellular automata.')
-    run_cellular_automata_colony(L=L,dx=dx, T=T ,dt=dt, divisionTimeHours=division_time_hours, p_division=p_division, plot1D=True, plotScatter=True, plotVolume=True)
+    run_cellular_automata_colony(L=L,dx=dx, T=T ,dt=dt, seed=seed, divisionTimeHours=division_time_hours, p_division=p_division, plot1D=True, plotScatter=True, plotVolume=True)
     # run_cellular_automata_colony(L=L,dx=dx, T=T, dt=dt, division_time_hours=division_time_hours, p_division=p_division, plot1D=True, plotScatter=True)
     cell_matrix_record = pickle.load( open("../../out/cellular_automata_masks/caMask_seed%s_pdivision%s_L%s_J%s_T%s_N%s.pkl"%(seed,p_division,L,J,T,N), "rb" ) )
     daughterToMotherDictList = pickle.load( open("../../out/cellular_automata_masks/caMemory_seed%s_pdivision%s_L%s_J%s_T%s_N%s.pkl"%(seed,p_division,L,J,T,N), "rb" ) )
     
 
 
-filename= lambda parID: 'circuit%r_variant%s_bc%s_%s_ID%r_L%r_J%r_T%r_N%r'%(circuit_n,variant,boundaryCoeff, shape,parID,L,J,T,N)
-parID=1
+filename= lambda parID: 'circuit%r_variant%s_bc%s_%s_seed%r_ID%r_L%r_J%r_T%r_N%r'%(circuit_n,variant,boundaryCoeff, shape,seed, parID,L,J,T,N)
+parID=6
 
 
 #%%
@@ -107,3 +107,5 @@ pickle.dump(U_record, open("%s/2Drecord_%s.pkl"%(output_directory,filename(parID
 
 
 rgb = plot_redgreen_contrast(U_final,L,parID=filename(parID),filename = filename(parID), path = output_directory,scale_factor=x_gridpoints,save_figure=True)
+
+# %%

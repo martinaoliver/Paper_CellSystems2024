@@ -10,9 +10,7 @@ sys.path.append('../create_input_parameters/')
 #############
 import pickle as pkl
 import numpy as np
-from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from sklearn.metrics import mean_squared_error
 from scipy.optimize import curve_fit
 from tqdm import tqdm
 import pandas as pd
@@ -364,7 +362,6 @@ KtoV = {'Kda': 'Vd', 'Kub': 'Va', 'Keb': 'Ve', 'Kvd': 'Vb', 'Kfe': 'Vf','Kce': '
 def checkBalance(par_dict):
     balanceDict = {}
     for Km in Km_list:
-        # print(Km)
         Vx =par_dict[KtoV[Km]]
         Kxy = par_dict[Km]
         if Kxy >= 1 and Kxy <= Vx:
@@ -380,10 +377,8 @@ def checkBalance(par_dict):
     if 'Not balanced' in balanceDict.values():
         return 'Not balanced'
     elif 'Semi balanced'  in balanceDict.values():
-        # print('semibalanced')
         return 'Semi balanced'
     elif all(x == 'Balanced' for x in balanceDict.values()):
-        # print('Balanced')
         return 'Balanced'
     
 
