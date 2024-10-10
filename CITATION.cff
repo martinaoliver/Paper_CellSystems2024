@@ -1,0 +1,10 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Oliver Huidobro
+  given-names: Martina
+orcid: https://orcid.org/0000-0002-5382-5191
+title:
+version: v1.0.0
+date-released: 2024-10-10
+                            
